@@ -81,6 +81,8 @@ class MAEEncoder(nn.Module):
                 drop_path = drop_path_rate[i] if isinstance(drop_path_rate, list) else drop_path_rate
                 )
             for i in range(depth)])
+        # self.first = nn.Linear(256, 384)
+        # self.final = nn.Linear(384, 256)
 
         if ckpt is not None:
             self.load_ckpt(ckpt)
@@ -101,9 +103,10 @@ class MAEEncoder(nn.Module):
     def forward(self, feats, xyz):
         # print(feats.shape)
         # x = feats.permute(())
-        x = feats.transpose(0, 1)
-        # print(x.shape)
+        # x = self.first(feats.transpose(0, 1))
+        # x = self.first(feats)
         x = feats
         for _, block in enumerate(self.blocks):
             x = block(x)
+        # x = self.final(x)
         return xyz, x, None

@@ -108,6 +108,9 @@ class MinkUNetBase(nn.Module):
         if ckpt is not None:
             print('loading ckpt from: %s' % ckpt)
             base_ckpt = torch.load(ckpt)['state_dict']
+            for k in list(base_ckpt.keys()):
+                if k.startswith('final.') :
+                    del base_ckpt[k]    
             incompatible = self.load_state_dict(base_ckpt, strict=False)
             print(incompatible.missing_keys)
             print(incompatible.unexpected_keys)
